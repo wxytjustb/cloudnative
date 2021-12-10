@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: server
+  name: server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      labels:
+        app: server
+    spec:
+
+      containers:
+        - image: "wxytjustb/httpserver:latest"
+          name: httpserver
+
+          startupProbe:
+            httpGet:
+              path: healthz
+              port: 8080
+              host: 127.0.0.1
+          # 检查服务启动状态之后ready
+          readinessProbe:
+            httpGet:
+              path: healthz
+              port: 8080
+              host: 127.0.0.1
+            initialDelaySeconds: 1
+            periodSeconds: 5
+            successThreshold: 2
+          # 探活，失败重启
+          livenessProbe:
+            httpGet:
+              path: healthz
+              port: 8080
+              host: 127.0.0.1
+          lifecycle:
+            preStop:
+              exec:
+
+
+
+          resources:
+            limits:
+              memory: 100Mi
+              cpu: 100m
+            requests:
+              memory: 10Mi
+              cpu: 10m
+
+
+
