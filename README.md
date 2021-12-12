@@ -4,6 +4,7 @@
 
 
 k8s是模块八作业
+----------------
 使用ingress controller使用traefik
 
 默认使用traefik helm部署，手动修改deployment的8000和8443端口的hostPort
@@ -18,6 +19,10 @@ k8s是模块八作业
   name: websecure
   protocol: TCP
 ```
+
+使用http://h.roky.work:8000和https://h.roky.work:8443访问
+
+
 
 
 
