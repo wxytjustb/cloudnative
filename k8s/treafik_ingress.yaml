@@ -1,0 +1,29 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: httpserver
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: Host(`h.roky.work`)
+      services:
+        - name: httpserver
+          port: 8080
+---
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: httpserver-https
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`h.roky.work`)
+      services:
+        - name: httpserver
+          port: 8080

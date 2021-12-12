@@ -1,9 +1,13 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 )
 
 
@@ -28,8 +32,51 @@ func Handler(writer http.ResponseWriter, request *http.Request)  {
 
 
 func main()  {
+
 	http.HandleFunc("/", Handler)
 	http.HandleFunc("/healthz", Handler)
 
-	http.ListenAndServe("0.0.0.0:8080", nil)
+
+	// 使用环境变量到达配置与代码分离
+	Port := "8080"
+	if os.Getenv("Port") != "" {
+		Port = os.Getenv("Port")
+	}
+
+	server := &http.Server{Addr: fmt.Sprintf("0.0.0.0:%s", Port), Handler: nil}
+
+
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGTERM, syscall.SIGINT)
+
+	// 监听信号优雅关闭
+	go func(server *http.Server) {
+		log.Println("Waiting signal")
+		sig := <-sigs
+		log.Printf("Get Signal: %s, call server.Shutdown ", sig.String())
+		server.Shutdown(context.Background())
+	}(server)
+
+
+	log.Println("start listen and serve")
+	if err := server.ListenAndServe(); err != nil{
+		log.Printf("serve error: %s", err)
+	}
+
+
+
+
+
+
+	//if err := http.ListenAndServe("0.0.0.0:8080", nil); err != nil {
+	//	panic("restart error")
+	//}
+
+
+
+
+
+
+
+
 }
