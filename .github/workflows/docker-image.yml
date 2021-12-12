@@ -23,7 +23,11 @@ jobs:
     
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag wxytjustb/httpserver:$(date +%s)
+      working-directory: httpserver
+      run: | 
+        docker build . --file Dockerfile --tag wxytjustb/httpserver:latest
+        docker push wxytjustb/httpserver:latest
+    
       
 
 
