@@ -19,7 +19,7 @@ jobs:
       with:
         registry: "docker.io"
         username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}    
+        password: ${{ secrets.DOCKER_HUB }}    
     
     - uses: actions/checkout@v2
     - name: Build the Docker image
